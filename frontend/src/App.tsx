@@ -1,18 +1,15 @@
-import { Space } from "antd";
-import HealthCheck from "./components/HealthCheck";
+import { createReactClient, LivepeerConfig, studioProvider } from "@livepeer/react";
+import { CreateAndViewAsset } from "./components/livepeer/CreateAndViewAsset";
 
-function App() {
+const livepeerClient = createReactClient({
+    provider: studioProvider(),
+});
+
+// Pass client to React Context Provider
+export default function App() {
     return (
-        <div className="App" style={{ margin: "24px" }}>
-            {/* <Space>
-                <OverlainMap />
-            </Space>
-            <Divider /> */}
-            <Space>
-                <HealthCheck />
-            </Space>
-        </div>
+        <LivepeerConfig client={livepeerClient}>
+            <CreateAndViewAsset />
+        </LivepeerConfig>
     );
 }
-
-export default App;
