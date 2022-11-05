@@ -1,7 +1,7 @@
 import { Alert } from "antd";
 import Button from "antd/lib/button";
 import { useState } from "react";
-import { login } from "./helpers/login";
+import { login } from "./helpers/authentication/login";
 
 export const LoginPrompt = () => {
     const [result, setResult] = useState<string | null>(null);
