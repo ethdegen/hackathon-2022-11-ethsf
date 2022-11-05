@@ -1,18 +1,5 @@
-import { createReactClient, studioProvider } from "@livepeer/react";
-import LoginSelfCustody from "./components/lens/LoginSelfCustody";
-
-const livepeerClient = createReactClient({
-    provider: studioProvider(),
-});
-
-// Pass client to React Context Provider
+import NotionPuller from "./components/puller/NotionPuller";
 
 export default function App() {
-    return (
-        // <LivepeerConfig client={livepeerClient}>
-        //     <CreateAndViewAsset />
-        // </LivepeerConfig>
-        // <DisplayAddress />
-        <LoginSelfCustody />
-    );
+    return <NotionPuller />;
 }
