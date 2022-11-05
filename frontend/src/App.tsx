@@ -1,5 +1,5 @@
 import { createReactClient, studioProvider } from "@livepeer/react";
-import { LoginPrompt } from "./components/lens/LoginPrompt";
+import Home from "./components/lens/Home";
 
 const livepeerClient = createReactClient({
     provider: studioProvider(),
@@ -7,15 +7,12 @@ const livepeerClient = createReactClient({
 
 // Pass client to React Context Provider
 
-
-
-
 export default function App() {
     return (
         // <LivepeerConfig client={livepeerClient}>
         //     <CreateAndViewAsset />
         // </LivepeerConfig>
         // <DisplayAddress />
-        <LoginPrompt />
+        <Home />
     );
 }

@@ -5,11 +5,6 @@
         }
     },
     "dockerComposeFile": ["./docker-compose.yml"],
-    "mounts": [{
-        "source": "~/.ssh",
-        "target": "/root/.ssh",
-        "type": "bind"
-    }],
     "service": "workspace",
     "shutdownAction": "stopCompose",
     "workspaceFolder": "/workspace"
