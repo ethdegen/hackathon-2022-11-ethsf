@@ -1,0 +1,11 @@
+{
+    "customizations": {
+        "vscode": {
+            "extensions": ["eamodio.gitlens", "esbenp.prettier-vscode", "ms-python.python"]
+        }
+    },
+    "dockerComposeFile": ["./docker-compose.yml"],
+    "service": "workspace",
+    "shutdownAction": "stopCompose",
+    "workspaceFolder": "/workspace"
+}
