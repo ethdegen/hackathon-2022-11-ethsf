@@ -1,6 +1,6 @@
-import { apolloClient } from "./apollo-client";
-import { getAddressFromSigner, signText } from "./ethers.service";
-import { AuthenticateDocument, ChallengeDocument, ChallengeRequest, SignedAuthChallenge } from "./generated";
+import { apolloClient } from "../apollo-client";
+import { getAddressFromSigner, signText } from "../ethers.service";
+import { AuthenticateDocument, ChallengeDocument, ChallengeRequest, SignedAuthChallenge } from "../graphql/generated";
 
 export const generateChallenge = async (request: ChallengeRequest) => {
     const result = await apolloClient.query({
