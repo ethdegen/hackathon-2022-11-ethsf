@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "backend_attach",
+            "type": "python",
+            "request": "attach",
+            "processId": "${command:pickProcess}",
+            "logToFile": true
+        },
+        {
+            "name": "backend_launch",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "internalConsole",
+            "logToFile": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/backend/src"
+            }
+        },
+        {
+            "name": "frontend_attach_browser",
+            "type": "chrome",
+            "request": "attach",
+            "webRoot": "${workspaceFolder}/frontend",
+            "port": 9222
+        },
+        {
+            "name": "frontend_launch_browser",
+            "type": "chrome",
+            "request": "launch",
+            "webRoot": "${workspaceFolder}/frontend",
+            "url": "http://localhost:3000",
+            "userDataDir": true
+        },
+        {
+            "name": "frontend_launch_server",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "npm start",
+            "cwd": "${workspaceFolder}/frontend"
+        }
+    ]
+}
