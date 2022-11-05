@@ -6,7 +6,11 @@ export default class PullerClient {
     }
 
     public async getPage(pageId: string) {
-        return (await fetch(`http://localhost:3003/notion/pull?api_key=${this.apiKey}&page_id=${pageId}`)).json();
+        return (
+            await fetch(
+                `http://localhost:3003/notion/pull?api_key=${encodeURI(this.apiKey)}&page_id=${encodeURI(pageId)}`
+            )
+        ).json();
     }
 
     public static async gogogo(): Promise<string> {

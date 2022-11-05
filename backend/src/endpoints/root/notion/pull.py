@@ -1,8 +1,6 @@
 from flask import jsonify, request
-import requests
-
-from ....domain.notion.client import NotionClient
 from .. import app
+from ....domain.notion.client import NotionClient
 
 
 @app.route(
@@ -15,24 +13,18 @@ def notion_pull_get():
     try:
         params = request.args
 
-        response = requests.get(
-            url=f"https://api.notion.com/v1/blocks/{params['page_id']}/children?page_size=100",
-            headers={
-                "Authorization": "Bearer " + params["api_key"],
-                "Accept": "application/json",
-                "Notion-Version": "2022-06-28",
-                "Content-Type": "application/json",
-            },
-        )
+        notion = NotionClient(params["api_key"], params["page_id"])
+        response = notion.getBlock()
 
         return jsonify(
             {
                 "success": True,
-                "content": response.json()["results"],
+                "content": response,
             },
         )
 
     except Exception as e:
+        print(e)
         return jsonify(
             {
                 "success": False,
