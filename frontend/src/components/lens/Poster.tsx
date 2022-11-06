@@ -1,6 +1,6 @@
 import { Alert, Button } from "antd";
 import { useCallback, useState } from "react";
-import { createPostGasless } from "./helpers/publications/post-gasless";
+import { createPostImage, createPostText, createPostVideo } from "./helpers/publications/post-gasless";
 
 export const Poster: React.FC<{
     walletAddress: string;
@@ -10,11 +10,13 @@ export const Poster: React.FC<{
 
     const post = useCallback(async () => {
         try {
-            await createPostGasless(
-                walletAddress,
+            await createPostText(activeProfile, "text", "The quick brown fox jumps over the lazy dog.");
+            await createPostImage(
                 activeProfile,
-                "ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE"
+                "image",
+                "https://i1.wp.com/www.theclothparcel.com/wp-content/uploads/we-made-it-button.jpg"
             );
+            await createPostVideo(activeProfile, "image", "https://samplelib.com/lib/preview/mp4/sample-5s.mp4");
             setContent("OK");
         } catch (e) {
             setContent(`Not OK: ${e}`);
