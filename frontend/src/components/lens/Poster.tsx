@@ -10,7 +10,11 @@ export const Poster: React.FC<{
 
     const post = useCallback(async () => {
         try {
-            await createPostGasless(walletAddress, activeProfile, "data:foobar");
+            await createPostGasless(
+                walletAddress,
+                activeProfile,
+                "ipfs://QmQqzMTavQgT4f4T5v6PWBp7XNKtoPmC9jvn12WPT3gkSE"
+            );
             setContent("OK");
         } catch (e) {
             setContent(`Not OK: ${e}`);

@@ -1,8 +1,11 @@
 import { BigNumber, utils } from "ethers";
+import { v4 as uuidv4 } from "uuid";
 import { apolloClient } from "../apollo-client";
 import { broadcastRequest } from "../broadcast/broadcast-follow-example";
 import { CreatePostViaDispatcherDocument, CreatePublicPostRequest } from "../graphql/generated";
 import { pollUntilIndexed } from "../indexer/has-transaction-been-indexed";
+import { Metadata, PublicationMainFocus } from "../interfaces/publication";
+import { uploadIpfs } from "../ipfs";
 import { profile } from "../profile/get-profile";
 import { signCreatePostTypedData } from "./post";
 
@@ -17,8 +20,8 @@ const createPostViaDispatcherRequest = async (request: CreatePublicPostRequest) 
     return result.data!.createPostViaDispatcher;
 };
 
-const post = async (createPostRequest: CreatePublicPostRequest, profileId: string) => {
-    const profileResult = await profile({ profileId });
+const post = async (createPostRequest: CreatePublicPostRequest) => {
+    const profileResult = await profile({ profileId: createPostRequest.profileId });
     if (!profileResult) {
         throw new Error("Could not find profile");
     }
@@ -54,10 +57,27 @@ const post = async (createPostRequest: CreatePublicPostRequest, profileId: strin
 };
 
 export const createPostGasless = async (address: string, profileId: string, uri: string) => {
+    const ipfsResult = await uploadIpfs<Metadata>({
+        version: "2.0.0",
+        mainContentFocus: PublicationMainFocus.TEXT_ONLY,
+        metadata_id: uuidv4(),
+        description: "Foo Bar",
+        locale: "en-US",
+        content: "Content",
+        external_url: null,
+        image: null,
+        imageMimeType: null,
+        name: "Name",
+        attributes: [],
+        tags: ["using_api_examples"],
+        appId: "api_examples_github",
+    });
+    console.log("create post: ipfs result", ipfsResult);
+
     // hard coded to make the code example clear
     const createPostRequest = {
         profileId,
-        contentURI: uri,
+        contentURI: `https://${ipfsResult.path}`,
         collectModule: {
             // feeCollectModule: {
             //   amount: {
@@ -86,7 +106,7 @@ export const createPostGasless = async (address: string, profileId: string, uri:
         },
     };
 
-    const result = await post(createPostRequest, profileId);
+    const result = await post(createPostRequest);
     console.log("create post gasless", result);
 
     console.log("create post: poll until indexed");
