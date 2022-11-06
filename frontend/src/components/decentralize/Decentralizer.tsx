@@ -98,7 +98,7 @@ export const Decentralizer: React.FC<{
             )}
             {completion !== undefined && (
                 <div>
-                    Decentralizing: <Progress percent={completion * 100} />
+                    {completion < 100 ? "Decentralizing" : "Decentralized"}: <Progress percent={completion * 100} />
                 </div>
             )}
         </Space>
