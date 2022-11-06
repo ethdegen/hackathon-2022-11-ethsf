@@ -1,6 +1,7 @@
 from flask import jsonify, request
-from .. import app
+
 from ....domain.notion.client import NotionClient, pending
+from .. import app
 
 
 @app.route(
@@ -12,7 +13,7 @@ from ....domain.notion.client import NotionClient, pending
 def notion_complete_get():
     try:
         params = request.args
-        task = pending[id]
+        task = pending[params["id"]]
 
         if task and task["complete"]:
             return (
@@ -29,7 +30,9 @@ def notion_complete_get():
         )
 
     except Exception as e:
-        print(e)
+        import traceback
+
+        print(traceback.format_exc())
         return jsonify(
             {
                 "success": False,

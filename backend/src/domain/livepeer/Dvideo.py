@@ -1,7 +1,8 @@
-import requests
-from time import sleep
-from datetime import datetime
 import json
+from datetime import datetime
+from time import sleep
+
+import requests
 
 
 class Dvideo:
@@ -71,7 +72,7 @@ class Dvideo:
                 index += 1
                 sleep(1)
             elif status == "failed":
-                self.getStatus(id, test=True)
+                self.getStatus(id)
                 break
             else:
                 break

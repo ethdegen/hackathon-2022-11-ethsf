@@ -1,6 +1,7 @@
 from flask import jsonify, request
-from .. import app
+
 from ....domain.notion.client import NotionClient
+from .. import app
 
 
 @app.route(
@@ -24,7 +25,9 @@ def notion_pull_get():
         )
 
     except Exception as e:
-        print(e)
+        import traceback
+
+        print(traceback.format_exc())
         return jsonify(
             {
                 "success": False,

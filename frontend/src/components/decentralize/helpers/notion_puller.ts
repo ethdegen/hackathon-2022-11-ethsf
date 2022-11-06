@@ -1,5 +1,6 @@
 export type NotionPending = {
-    job_id: string;
+    content: { job_id: string };
+    success: boolean;
 };
 
 export type NotionPull = {
