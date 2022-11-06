@@ -73,7 +73,7 @@ class NotionClient:
             args=(pending[id],),
         ).start()
 
-        return {"job_id": id}
+        return {"job_id": id, "preview": filtered_content}
 
 
 def worker(task):
