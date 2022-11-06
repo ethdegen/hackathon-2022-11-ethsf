@@ -70,8 +70,8 @@ export const PublicationsDisplay = () => {
                                     <img src={active.media[0].original.url} style={{ width: "100%", height: "100%" }} />
                                 </div>
                             )}
-                            {active.media[0]?.original.url && active.media[0]?.original.mimeType !== "image/jpeg" && (
-                                <iframe width={"100%"} height={"100%"} src={active.media[0].original.url} />
+                            {active.media[0]?.original.url && active.media[0]?.original.mimeType === "video/mp4" && (
+                                <video width={"100%"} height={"100%"} src={active.media[0].original.url} />
                             )}
                         </Content>
                     )}

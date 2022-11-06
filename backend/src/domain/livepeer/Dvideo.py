@@ -47,7 +47,8 @@ class Dvideo:
         response = requests.patch(url, headers=headers, json=body)
 
         if response.status_code == 200:
-            return response.json()["playbackUrl"]
+            json = response.json()
+            return json["downloadUrl"]
         else:
             print("Something wrong when uploading asset to IPFS")
             return False
