@@ -1,5 +1,10 @@
 import { apolloClient } from "../apollo-client";
-import { PublicationsDocument, PublicationsQueryRequest, PublicationTypes } from "../graphql/generated";
+import {
+    PaginatedPublicationResult,
+    PublicationsDocument,
+    PublicationsQueryRequest,
+    PublicationTypes,
+} from "../graphql/generated";
 
 const getPublicationsRequest = async (request: PublicationsQueryRequest) => {
     const result = await apolloClient.query({
@@ -9,7 +14,7 @@ const getPublicationsRequest = async (request: PublicationsQueryRequest) => {
         },
     });
 
-    return result.data.publications;
+    return result.data.publications as PaginatedPublicationResult;
 };
 
 export const getPublications = async (profileId: string) => {
