@@ -1,5 +1,5 @@
 export type NotionPending = {
-    content: { job_id: string };
+    content: { job_id: string; preview: { type: string; url: string | string[] }[] };
     success: boolean;
 };
 
