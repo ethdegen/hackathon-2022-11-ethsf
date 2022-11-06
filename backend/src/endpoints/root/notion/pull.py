@@ -13,7 +13,7 @@ def notion_pull_get():
     try:
         params = request.args
 
-        notion = NotionClient(params["api_key"], params["page_id"])
+        notion = NotionClient(params["api_key"], params["page_id"], params["livepeer_api_key"])
         response = notion.getBlock()
 
         return jsonify(

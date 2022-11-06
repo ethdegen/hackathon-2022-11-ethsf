@@ -3,6 +3,7 @@ from time import sleep
 from datetime import datetime
 import json
 
+
 class Dvideo:
     def __init__(self, video_url, livepeer_token):
         self.video_url = video_url
@@ -25,7 +26,6 @@ class Dvideo:
             print("Something wrong when uploading video to livepeer!")
             print(response.json())
             return False
-        
 
     def getStatus(self, asset_id, testMode=False):
         # get status of one asset according to its id
@@ -37,7 +37,6 @@ class Dvideo:
             return response.json()["status"]["phase"]
         else:
             print(response.json())
-
 
     def uploadIPFS(self, asset_id):
         # uplaod asset to IPFS when it is ready and return playback url
@@ -51,7 +50,7 @@ class Dvideo:
         else:
             print("Something wrong when uploading asset to IPFS")
             return False
-    
+
     def decentralize(self):
         id = self.uploadVideo()
         count = 5
@@ -87,15 +86,3 @@ class Dvideo:
         else:
             print("Something wrong when prepare assert")
             return False
-        
-
-
-    
-
-
-
-
-
-
-
-

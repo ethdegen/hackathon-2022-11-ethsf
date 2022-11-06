@@ -1,8 +1,14 @@
+import threading
+import uuid
 import requests
+from ..livepeer import Dvideo
+
+
+pending = map()
 
 
 class NotionClient:
-    def __init__(self, api_key, page_id) -> None:
+    def __init__(self, api_key, page_id, livepeer_token) -> None:
         # base information
         self.api_key = api_key
         self.base_url = "https://api.notion.com/v1/"
@@ -13,6 +19,7 @@ class NotionClient:
             "Notion-Version": "2022-06-28",
             "Content-Type": "application/json",
         }
+        self.token = livepeer_token
 
     def getBlock(self, includeImage=False):
         """
@@ -51,5 +58,28 @@ class NotionClient:
             if item["type"] != "separator":
                 filtered_content.append(item)
 
-        return filtered_content
+        id = uuid().__str__()
 
+        pending[id] = {
+            "complete": False,
+            "error": None,
+            "livepeer_api_key": self.livepeer_token,
+            "content": filtered_content,
+        }
+
+        threading.Thread(target=worker, args=(pending[id],)).start()
+
+        return {"job_id": id}
+
+
+def worker(task):
+    filtered_content = task["content"]
+    for item in filtered_content:
+        if item["type"] == "video":
+            video_url = item["url"]
+            dvideo = Dvideo(video_url=video_url, livepeer_token=task["livepeer_api_key"])
+            dvideo_url = dvideo.decentralize()
+            if dvideo_url:
+                item["url"] = dvideo_url
+
+    task["complete"] = True

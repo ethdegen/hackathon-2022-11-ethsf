@@ -20,7 +20,7 @@ export const Decentralizer: React.FC<{
 
     const decentralize = useCallback(async () => {
         if (notionApiKey && notionPageId && livepeerApiKey) {
-            const puller = new NotionPuller(notionApiKey);
+            const puller = new NotionPuller(notionApiKey, livepeerApiKey);
             const pusher = new LensPusher(activeProfile);
             await pusher.push(await puller.pull(notionPageId), progress);
             setCompletion(undefined);
