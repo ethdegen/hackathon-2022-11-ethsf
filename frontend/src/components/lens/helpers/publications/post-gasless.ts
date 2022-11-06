@@ -2,12 +2,40 @@ import { BigNumber, utils } from "ethers";
 import { v4 as uuidv4 } from "uuid";
 import { apolloClient } from "../apollo-client";
 import { broadcastRequest } from "../broadcast/broadcast-follow-example";
-import { CreatePostViaDispatcherDocument, CreatePublicPostRequest } from "../graphql/generated";
+import { signedTypeData } from "../ethers.service";
+import {
+    CreatePostTypedDataDocument,
+    CreatePostViaDispatcherDocument,
+    CreatePublicPostRequest,
+} from "../graphql/generated";
 import { pollUntilIndexed } from "../indexer/has-transaction-been-indexed";
 import { Metadata, PublicationMainFocus } from "../interfaces/publication";
 import { uploadIpfs } from "../ipfs";
 import { profile } from "../profile/get-profile";
-import { signCreatePostTypedData } from "./post";
+
+const createPostTypedData = async (request: CreatePublicPostRequest) => {
+    const result = await apolloClient.mutate({
+        mutation: CreatePostTypedDataDocument,
+        variables: {
+            request,
+        },
+    });
+
+    return result.data!.createPostTypedData;
+};
+
+const signCreatePostTypedData = async (request: CreatePublicPostRequest) => {
+    const result = await createPostTypedData(request);
+    console.log("create post: createPostTypedData", result);
+
+    const typedData = result.typedData;
+    console.log("create post: typedData", typedData);
+
+    const signature = await signedTypeData(typedData.domain, typedData.types, typedData.value);
+    console.log("create post: signature", signature);
+
+    return { result, signature };
+};
 
 const createPostViaDispatcherRequest = async (request: CreatePublicPostRequest) => {
     const result = await apolloClient.mutate({

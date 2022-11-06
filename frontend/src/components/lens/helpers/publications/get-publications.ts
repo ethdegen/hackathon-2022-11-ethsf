@@ -13,11 +13,8 @@ const getPublicationsRequest = async (request: PublicationsQueryRequest) => {
 };
 
 export const getPublications = async (profileId: string) => {
-    const result = await getPublicationsRequest({
+    return await getPublicationsRequest({
         profileId,
         publicationTypes: [PublicationTypes.Post, PublicationTypes.Comment, PublicationTypes.Mirror],
     });
-    console.log("publications: result", result.items);
-
-    return result;
 };

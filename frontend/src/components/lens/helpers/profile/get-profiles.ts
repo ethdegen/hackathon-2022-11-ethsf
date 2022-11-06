@@ -13,11 +13,5 @@ const getProfilesRequest = async (request: ProfileQueryRequest) => {
 };
 
 export const profiles = async (address: string) => {
-    console.log("profiles: address", address);
-
-    const profilesOwned = await getProfilesRequest({ ownedBy: [address] });
-
-    console.log("profiles: result", profilesOwned);
-
-    return profilesOwned;
+    return await getProfilesRequest({ ownedBy: [address] });
 };
