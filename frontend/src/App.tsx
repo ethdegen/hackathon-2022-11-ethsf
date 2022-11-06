@@ -1,16 +1,17 @@
-import { Space } from "antd";
+import { Tabs } from "antd";
+import { Decentralizer } from "./components/decentralize/Decentralizer";
 import { Authenticator } from "./components/lens/Authenticator";
 import { LoginBrowser } from "./components/lens/LoginBrowser";
-import { Poster } from "./components/lens/Poster";
 import { PublicationsDisplay } from "./components/lens/PublicationsDisplay";
-import NotionPuller from "./components/puller/NotionPuller";
 
 export default function App() {
-    return (
-        <Space direction="vertical">
-            <NotionPuller />
-            <PublicationsDisplay />
-            <Authenticator Login={LoginBrowser} Business={Poster} />
-        </Space>
-    );
+    const items = [
+        { label: "Display Decentralized Social Media", key: "display", children: <PublicationsDisplay /> },
+        {
+            label: "Decentralize My Social Media !!",
+            key: "decentralize",
+            children: <Authenticator Login={LoginBrowser} Business={Decentralizer} />,
+        },
+    ];
+    return <Tabs items={items} />;
 }
