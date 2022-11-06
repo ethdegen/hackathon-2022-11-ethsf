@@ -1,4 +1,4 @@
-import { Button, Input, Progress, Space } from "antd";
+import { Button, Input, Progress, Space, Spin } from "antd";
 import { useCallback, useState } from "react";
 import LensPusher from "./helpers/lens_pusher";
 import NotionPuller, { NotionPull } from "./helpers/notion_puller";
@@ -50,7 +50,6 @@ export const Decentralizer: React.FC<{
         if (notionPull && completion === undefined) {
             const pusher = new LensPusher(activeProfile);
             await pusher.push(notionPull, progress);
-            setCompletion(undefined);
             setNotionPull(undefined);
         }
     }, [notionPull, completion, progress, activeProfile]);
@@ -59,17 +58,39 @@ export const Decentralizer: React.FC<{
         <Space direction="vertical">
             <div>Social Media Decentralizer</div>
             Notion API key:
-            <Input value={notionApiKey} onChange={(e) => setNotionApiKey(e.target.value)} />
+            <Input
+                value={notionApiKey}
+                onChange={(e) => {
+                    setNotionApiKey(e.target.value);
+                    setCompletion(undefined);
+                }}
+            />
             Notion Page ID:
-            <Input value={notionPageId} onChange={(e) => setNotionPageId(e.target.value)} />
+            <Input
+                value={notionPageId}
+                onChange={(e) => {
+                    setNotionPageId(e.target.value);
+                    setCompletion(undefined);
+                }}
+            />
             LivePeer API key:
-            <Input value={livepeerApiKey} onChange={(e) => setLivepeerApiKey(e.target.value)} />
+            <Input
+                value={livepeerApiKey}
+                onChange={(e) => {
+                    setLivepeerApiKey(e.target.value);
+                    setCompletion(undefined);
+                }}
+            />
             {completion === undefined && !pulling && !notionPull && (
                 <Button type="primary" onClick={prepare}>
                     Prepare My Social Media for Decentralization
                 </Button>
             )}
-            {completion === undefined && pulling && <div>Please Wait While Your Social Media Is Prepared...</div>}
+            {completion === undefined && pulling && (
+                <div>
+                    Preparing: <Spin />
+                </div>
+            )}
             {completion === undefined && notionPull && (
                 <Button type="primary" onClick={dencentralize}>
                     Decentralize My Social Media

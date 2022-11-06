@@ -36,7 +36,7 @@ export const PublicationsDisplay = () => {
 
     const items: MenuProps["items"] = content?.items.map((item, i) =>
         getItem(item.metadata.name, item.id, (item) => {
-            setActive(content.items.find((i) => i.id == item.key)?.metadata);
+            setActive(content.items.find((i) => i.id === item.key)?.metadata);
         })
     );
 
@@ -65,7 +65,12 @@ export const PublicationsDisplay = () => {
                             }}
                         >
                             {active.content && <span>{active.content}</span>}
-                            {active.media[0]?.original.url && (
+                            {active.media[0]?.original.url && active.media[0]?.original.mimeType === "image/jpeg" && (
+                                <div className="box">
+                                    <img src={active.media[0].original.url} style={{ width: "100%", height: "100%" }} />
+                                </div>
+                            )}
+                            {active.media[0]?.original.url && active.media[0]?.original.mimeType !== "image/jpeg" && (
                                 <iframe width={"100%"} height={"100%"} src={active.media[0].original.url} />
                             )}
                         </Content>
