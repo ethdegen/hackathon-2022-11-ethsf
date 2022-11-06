@@ -1,4 +1,4 @@
-import { createPostImage, createPostText } from "../../lens/helpers/publications/post-gasless";
+import { createPostImage, createPostText, createPostVideo } from "../../lens/helpers/publications/post-gasless";
 
 export default class LensPusher {
     private readonly activeProfile: string;
@@ -24,7 +24,7 @@ export default class LensPusher {
                 await createPostImage(this.activeProfile, i.toString(), url);
             } else if (post.type === "video") {
                 const url = Array.isArray(post.url) ? post.url[0] : post.url;
-                await createPostImage(this.activeProfile, i.toString(), url);
+                await createPostVideo(this.activeProfile, i.toString(), url);
             }
             if (progress) {
                 progress(i + 1, content.length);

@@ -43,6 +43,7 @@ export const Authenticator: React.FC<{ Login: LoginComponent; Business: Business
                 while (!profs.items.length) {
                     await createProfile(walletAddress);
                     profs = await profiles(walletAddress);
+                    console.log(`Profiles: ${JSON.stringify(profs.items)}`);
                 }
                 setActiveProfile(profs.items[0].id);
             }

@@ -12,6 +12,7 @@ const getPublicationsRequest = async (request: PublicationsQueryRequest) => {
         variables: {
             request,
         },
+        fetchPolicy: "network-only",
     });
 
     return result.data.publications as PaginatedPublicationResult;

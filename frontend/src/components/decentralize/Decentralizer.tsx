@@ -58,7 +58,6 @@ export const Decentralizer: React.FC<{
 
     return (
         <Space direction="vertical">
-            <div>Social Media Decentralizer</div>
             Notion API key:
             <Input
                 value={notionApiKey}
@@ -100,7 +99,7 @@ export const Decentralizer: React.FC<{
             )}
             {completion !== undefined && (
                 <div>
-                    {completion < 100 ? "Decentralizing" : "Decentralized"}: <Progress percent={completion * 100} />
+                    {completion < 1 ? "Decentralizing" : "Decentralized"}: <Progress percent={completion * 100} />
                 </div>
             )}
         </Space>

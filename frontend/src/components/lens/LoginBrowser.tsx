@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { ethers } from "ethers";
 import { useCallback, useEffect, useState } from "react";
 import { challenge } from "./helpers/api";
@@ -47,8 +48,8 @@ export const LoginBrowser: React.FC<{
     return (
         <div>
             {!provider && <div>Please install a browser-based wallet extension</div>}
-            {provider && !address && <button onClick={connect}>Connect browser-based wallet</button>}
-            {provider && address && <button onClick={login}>Login with browser-based wallet</button>}
+            {provider && !address && <Button onClick={connect}>Connect browser-based wallet</Button>}
+            {provider && address && <Button onClick={login}>Login with browser-based wallet</Button>}
         </div>
     );
 };

@@ -35,9 +35,19 @@ export const PublicationsDisplay = () => {
     }
 
     const items: MenuProps["items"] = content?.items.map((item, i) =>
-        getItem(item.metadata.name, item.id, (item) => {
-            setActive(content.items.find((i) => i.id === item.key)?.metadata);
-        })
+        getItem(
+            `Post (${
+                item.metadata.content
+                    ? "text"
+                    : item.metadata.media[0]?.original.mimeType === "image/jpeg"
+                    ? "image"
+                    : "video"
+            })`,
+            item.id,
+            (item) => {
+                setActive(content.items.find((i) => i.id === item.key)?.metadata);
+            }
+        )
     );
 
     return (
@@ -54,7 +64,12 @@ export const PublicationsDisplay = () => {
             {content !== undefined && (
                 <Layout style={{ flexDirection: "row" }}>
                     <Sider width={200}>
-                        <Menu mode="inline" style={{ height: "100%", borderRight: 0 }} theme="dark" items={items} />
+                        <Menu
+                            mode="inline"
+                            style={{ maxHeight: "576px", borderRight: 0, overflowY: "scroll" }}
+                            theme="dark"
+                            items={items}
+                        />
                     </Sider>
                     {active && (
                         <Content
@@ -66,12 +81,15 @@ export const PublicationsDisplay = () => {
                         >
                             {active.content && <span>{active.content}</span>}
                             {active.media[0]?.original.url && active.media[0]?.original.mimeType === "image/jpeg" && (
-                                <div className="box">
-                                    <img src={active.media[0].original.url} style={{ width: "100%", height: "100%" }} />
-                                </div>
+                                <img src={active.media[0].original.url} style={{ maxWidth: "100%", height: "auto" }} />
                             )}
                             {active.media[0]?.original.url && active.media[0]?.original.mimeType === "video/mp4" && (
-                                <video width={"100%"} height={"100%"} src={active.media[0].original.url} />
+                                <video
+                                    controls={true}
+                                    width={"100%"}
+                                    height={"100%"}
+                                    src={active.media[0].original.url}
+                                />
                             )}
                         </Content>
                     )}
