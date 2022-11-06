@@ -16,13 +16,11 @@ def notion_complete_get():
         task = pending[params["id"]]
 
         if task and task["complete"]:
-            return (
-                jsonify(
-                    {
-                        "success": True,
-                        "content": task["content"],
-                    }
-                ),
+            return jsonify(
+                {
+                    "success": True,
+                    "content": task["content"],
+                }
             )
 
         return jsonify(
