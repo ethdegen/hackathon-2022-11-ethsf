@@ -1,7 +1,7 @@
 import { Button, Input, Progress, Space, Spin } from "antd";
 import { useCallback, useState } from "react";
 import LensPusher from "./helpers/lens_pusher";
-import NotionPuller, { NotionPull } from "./helpers/notion_puller";
+import NotionPuller from "./helpers/notion_puller";
 
 export const Decentralizer: React.FC<{
     walletAddress: string;
@@ -13,7 +13,7 @@ export const Decentralizer: React.FC<{
     const [notionPageId, setNotionPageId] = useState<string | undefined>("de32e778309648648c27fef0e74e3d4a");
     const [livepeerApiKey, setLivepeerApiKey] = useState<string | undefined>("8e39b76d-8a23-417c-bb64-e31e94d9796a");
     const [completion, setCompletion] = useState<number | undefined>();
-    const [notionPull, setNotionPull] = useState<NotionPull | undefined>();
+    const [content, setContent] = useState<{ type: string; url: string | string[] }[] | undefined>();
     const [pulling, setPulling] = useState<boolean>(false);
 
     const progress = useCallback((done: number, total: number) => {
@@ -29,7 +29,7 @@ export const Decentralizer: React.FC<{
             const pull = await puller.complete(jobId);
             if (pull.success) {
                 setPulling(false);
-                setNotionPull(pull);
+                setContent(pull.content);
             } else {
                 setTimeout(() => completer(jobId), 2000);
             }
@@ -40,19 +40,21 @@ export const Decentralizer: React.FC<{
     const prepare = useCallback(async () => {
         if (notionApiKey && notionPageId && livepeerApiKey) {
             const puller = new NotionPuller(notionApiKey, livepeerApiKey);
-            const jobId = (await puller.pull(notionPageId)).content.job_id;
+            const content = (await puller.pull(notionPageId)).content;
+            const jobId = content.job_id;
+            // setContent(content.preview);
             setPulling(true);
             setTimeout(() => completer(jobId), 4000);
         }
     }, [notionApiKey, notionPageId, livepeerApiKey, completer]);
 
     const dencentralize = useCallback(async () => {
-        if (notionPull && completion === undefined) {
+        if (content && completion === undefined) {
             const pusher = new LensPusher(activeProfile);
-            await pusher.push(notionPull, progress);
-            setNotionPull(undefined);
+            await pusher.push(content, progress);
+            setContent(undefined);
         }
-    }, [notionPull, completion, progress, activeProfile]);
+    }, [content, completion, progress, activeProfile]);
 
     return (
         <Space direction="vertical">
@@ -81,7 +83,7 @@ export const Decentralizer: React.FC<{
                     setCompletion(undefined);
                 }}
             />
-            {completion === undefined && !pulling && !notionPull && (
+            {completion === undefined && !pulling && !content && (
                 <Button type="primary" onClick={prepare}>
                     Prepare My Social Media for Decentralization
                 </Button>
@@ -91,7 +93,7 @@ export const Decentralizer: React.FC<{
                     Preparing: <Spin />
                 </div>
             )}
-            {completion === undefined && notionPull && (
+            {completion === undefined && content && (
                 <Button type="primary" onClick={dencentralize}>
                     Decentralize My Social Media
                 </Button>

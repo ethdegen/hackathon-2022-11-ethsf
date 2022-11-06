@@ -140,7 +140,7 @@ const createPost = async (profileId: string, metadata: Metadata) => {
     // hard coded to make the code example clear
     const createPostRequest = {
         profileId,
-        contentURI: `https://${ipfsResult.path}`,
+        contentURI: `ipfs://${ipfsResult.path}`,
         collectModule: {
             // feeCollectModule: {
             //   amount: {

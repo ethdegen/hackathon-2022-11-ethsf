@@ -50,7 +50,9 @@
         ]
     },
     "devDependencies": {
-        "@types/google-map-react": "^2.1.7",
         "@types/uuid": "^8.3.4"
+    },
+    "overrides": {
+        "@babel/plugin-transform-async-to-generator": "7.17.12"
     }
 }

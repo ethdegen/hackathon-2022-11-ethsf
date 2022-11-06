@@ -1,5 +1,4 @@
 import { createPostImage, createPostText } from "../../lens/helpers/publications/post-gasless";
-import { NotionPull } from "./notion_puller";
 
 export default class LensPusher {
     private readonly activeProfile: string;
@@ -8,12 +7,15 @@ export default class LensPusher {
         this.activeProfile = activeProfile;
     }
 
-    public async push(pull: NotionPull, progress?: (done: number, total: number) => void) {
+    public async push(
+        content: { type: string; url: string | string[] }[],
+        progress?: (done: number, total: number) => void
+    ) {
         if (progress) {
-            progress(0, pull.content.length);
+            progress(0, content.length);
         }
-        for (let i = 0; i < pull.content.length; i++) {
-            const post = pull.content[i];
+        for (let i = 0; i < content.length; i++) {
+            const post = content[i];
             if (post.type === "paragraph") {
                 const content = Array.isArray(post.url) ? post.url.join("\n") : post.url;
                 await createPostText(this.activeProfile, i.toString(), content);
@@ -25,7 +27,7 @@ export default class LensPusher {
                 await createPostImage(this.activeProfile, i.toString(), url);
             }
             if (progress) {
-                progress(i + 1, pull.content.length);
+                progress(i + 1, content.length);
             }
         }
     }

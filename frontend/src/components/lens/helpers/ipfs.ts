@@ -1,20 +1,19 @@
-// not actually IPFS right now for hackathon purposes but it will be in future !!!
-// right now this method is a really stupid placeholder...
-// we'll definitely absoltutely put all metadata onto IPFS in production !!!
 export const uploadIpfs = async <T>(data: T) => {
-    const response = await fetch("https://api.jsonbin.io/v3/b", {
+    const file = new File([JSON.stringify(data)], "metadata.json", { type: "application/json" });
+
+    const response = await fetch("https://api.web3.storage/upload", {
         method: "POST",
-        body: JSON.stringify(data),
+        body: file,
         headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": "$2b$10$I7Jeee1lIgdFljvfqipY.O.jeAmx7QiqERUZGlCF/5UdI9Sbl42E6",
-            "X-Bin-Private": "false",
+            Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweEFlOGM2M2I1RkE4RUQ2RjNCN2Y1QzMzMDQ4ODYxNzcyNmNEN2M2Y0YiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njc3MTgwOTI5OTYsIm5hbWUiOiJoYWNha3Rob24ifQ.gPD-iUQqNKg5iLkXksxD9o02VeeCzOANs4z6pRO7WT4"}`,
         },
     });
+    const result = await response.json();
+    const cid = result["cid"];
 
-    const result = (await response.json()) as { metadata: { id: string } };
-    console.log(JSON.stringify(result));
+    console.log("stored files with cid:", cid);
+
     return {
-        path: `api.jsonbin.io/v3/b/${result.metadata.id}?meta=false`,
+        path: cid,
     };
 };
