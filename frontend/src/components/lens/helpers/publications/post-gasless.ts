@@ -2,12 +2,40 @@ import { BigNumber, utils } from "ethers";
 import { v4 as uuidv4 } from "uuid";
 import { apolloClient } from "../apollo-client";
 import { broadcastRequest } from "../broadcast/broadcast-follow-example";
-import { CreatePostViaDispatcherDocument, CreatePublicPostRequest } from "../graphql/generated";
+import { signedTypeData } from "../ethers.service";
+import {
+    CreatePostTypedDataDocument,
+    CreatePostViaDispatcherDocument,
+    CreatePublicPostRequest,
+} from "../graphql/generated";
 import { pollUntilIndexed } from "../indexer/has-transaction-been-indexed";
 import { Metadata, PublicationMainFocus } from "../interfaces/publication";
 import { uploadIpfs } from "../ipfs";
 import { profile } from "../profile/get-profile";
-import { signCreatePostTypedData } from "./post";
+
+const createPostTypedData = async (request: CreatePublicPostRequest) => {
+    const result = await apolloClient.mutate({
+        mutation: CreatePostTypedDataDocument,
+        variables: {
+            request,
+        },
+    });
+
+    return result.data!.createPostTypedData;
+};
+
+const signCreatePostTypedData = async (request: CreatePublicPostRequest) => {
+    const result = await createPostTypedData(request);
+    console.log("create post: createPostTypedData", result);
+
+    const typedData = result.typedData;
+    console.log("create post: typedData", typedData);
+
+    const signature = await signedTypeData(typedData.domain, typedData.types, typedData.value);
+    console.log("create post: signature", signature);
+
+    return { result, signature };
+};
 
 const createPostViaDispatcherRequest = async (request: CreatePublicPostRequest) => {
     const result = await apolloClient.mutate({
@@ -56,22 +84,57 @@ const post = async (createPostRequest: CreatePublicPostRequest) => {
     }
 };
 
-export const createPostGasless = async (address: string, profileId: string, uri: string) => {
-    const ipfsResult = await uploadIpfs<Metadata>({
+export const createPostText = async (profileId: string, name: string, content: string, description?: string) => {
+    return createPost(profileId, {
         version: "2.0.0",
-        mainContentFocus: PublicationMainFocus.TEXT_ONLY,
-        metadata_id: uuidv4(),
-        description: "Foo Bar",
-        locale: "en-US",
-        content: "Content",
-        external_url: null,
-        image: null,
-        imageMimeType: null,
-        name: "Name",
         attributes: [],
-        tags: ["using_api_examples"],
-        appId: "api_examples_github",
+        locale: "en-US",
+        metadata_id: uuidv4(),
+        name,
+        mainContentFocus: PublicationMainFocus.TEXT_ONLY,
+        content,
+        description,
     });
+};
+
+export const createPostImage = async (profileId: string, name: string, url: string, description?: string) => {
+    return createPost(profileId, {
+        version: "2.0.0",
+        attributes: [],
+        locale: "en-US",
+        metadata_id: uuidv4(),
+        name,
+        mainContentFocus: PublicationMainFocus.IMAGE,
+        media: [
+            {
+                item: url,
+                type: "image/jpeg",
+            },
+        ],
+        description,
+    });
+};
+
+export const createPostVideo = async (profileId: string, name: string, url: string, description?: string) => {
+    return createPost(profileId, {
+        version: "2.0.0",
+        attributes: [],
+        locale: "en-US",
+        metadata_id: uuidv4(),
+        name,
+        mainContentFocus: PublicationMainFocus.VIDEO,
+        media: [
+            {
+                item: url,
+                type: "video/mp4",
+            },
+        ],
+        description,
+    });
+};
+
+const createPost = async (profileId: string, metadata: Metadata) => {
+    const ipfsResult = await uploadIpfs<Metadata>(metadata);
     console.log("create post: ipfs result", ipfsResult);
 
     // hard coded to make the code example clear
