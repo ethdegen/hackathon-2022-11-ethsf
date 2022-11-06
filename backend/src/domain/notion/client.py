@@ -14,7 +14,7 @@ class NotionClient:
             "Content-Type": "application/json",
         }
 
-    def getBlock(self, includeImage=False):
+    def getBlock(self, includeImage=True):
         """
         read Notion page and return contents
         """
@@ -52,4 +52,3 @@ class NotionClient:
                 filtered_content.append(item)
 
         return filtered_content
-
